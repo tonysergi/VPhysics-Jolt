@@ -76,13 +76,13 @@ void JoltPhysicsConstraintGroup::RemoveConstraint( JoltPhysicsConstraint *pConst
 //-------------------------------------------------------------------------------------------------
 
 JoltPhysicsConstraint::JoltPhysicsConstraint( JoltPhysicsEnvironment *pPhysicsEnvironment, IPhysicsObject *pReferenceObject, IPhysicsObject *pAttachedObject, constraintType_t Type, JPH::Constraint* pConstraint, void *pGameData )
-	: m_pPhysicsEnvironment( pPhysicsEnvironment )
-	, m_pPhysicsSystem( pPhysicsEnvironment->GetPhysicsSystem() )
-	, m_pObjReference( static_cast<JoltPhysicsObject*>( pReferenceObject ) )
+	: m_pObjReference( static_cast<JoltPhysicsObject*>( pReferenceObject ) )
 	, m_pObjAttached( static_cast<JoltPhysicsObject*>( pAttachedObject ) )
-	, m_ConstraintType( Type )
 	, m_pConstraint( pConstraint )
+	, m_ConstraintType( Type )
 	, m_pGameData( pGameData )
+	, m_pPhysicsEnvironment( pPhysicsEnvironment )
+	, m_pPhysicsSystem( pPhysicsEnvironment->GetPhysicsSystem() )
 {
 	m_pObjReference->AddDestroyedListener( this );
 	m_pObjAttached->AddDestroyedListener( this );

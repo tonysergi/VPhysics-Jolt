@@ -50,8 +50,8 @@ JoltPhysicsVehicleController::JoltPhysicsVehicleController( JoltPhysicsEnvironme
 	: m_pEnvironment( pEnvironment )
 	, m_pPhysicsSystem( pPhysicsSystem )
 	, m_pCarBodyObject( pVehicleBodyObject )
-	, m_VehicleType( nVehicleType )
 	, m_VehicleParams( params )
+	, m_VehicleType( nVehicleType )
 {
 	JPH::VehicleConstraintSettings vehicle;
 	vehicle.mUp					= VehicleUpVector;

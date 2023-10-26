@@ -22,16 +22,16 @@
 //-------------------------------------------------------------------------------------------------
 
 JoltPhysicsObject::JoltPhysicsObject( JPH::Body *pBody, JoltPhysicsEnvironment *pEnvironment, bool bStatic, int nMaterialIndex, const objectparams_t *pParams )
-	: m_pBody( pBody )
-	, m_pEnvironment( pEnvironment )
-	, m_pPhysicsSystem( pEnvironment->GetPhysicsSystem() )
+	: m_pGameData( pParams->pGameData )
+	, m_pName( pParams->pName )
 	, m_bStatic( bStatic )
+	, m_materialIndex( Max( nMaterialIndex, 0 ) ) // Sometimes we get passed -1.
 	, m_flCachedMass( pParams->mass )
 	, m_flCachedInvMass( m_flCachedMass ? 1.0f / m_flCachedMass : 0.0f )
-	, m_pGameData( pParams->pGameData )
-	, m_materialIndex( Max( nMaterialIndex, 0 ) ) // Sometimes we get passed -1.
 	, m_flVolume( pParams->volume )
-	, m_pName( pParams->pName )
+	, m_pBody( pBody )
+	, m_pEnvironment( pEnvironment )
+	, m_pPhysicsSystem( pEnvironment->GetPhysicsSystem() )
 {
 	// Josh:
 	// Assert that m_pGameData is the first element, some games
@@ -52,10 +52,10 @@ JoltPhysicsObject::JoltPhysicsObject( JPH::Body *pBody, JoltPhysicsEnvironment *
 }
 
 JoltPhysicsObject::JoltPhysicsObject( JPH::Body *pBody, JoltPhysicsEnvironment *pEnvironment, void *pGameData, JPH::StateRecorder &recorder )
-	: m_pBody( pBody )
+	: m_pGameData( pGameData )
+	, m_pBody( pBody )
 	, m_pEnvironment( pEnvironment )
 	, m_pPhysicsSystem( pEnvironment->GetPhysicsSystem() )
-	, m_pGameData( pGameData )
 {
 	RestoreObjectState( recorder );
 }
