@@ -100,7 +100,9 @@ void JoltPhysicsMotionController::OnPreSimulate( float flDeltaTime )
 
 		Vector vecLocalVelocity = vec3_origin;
 		Vector vecAngularVelocity = vec3_origin;
-		IMotionEvent::simresult_e simResult = m_pMotionEvent->Simulate( this, pObject, flDeltaTime, vecLocalVelocity, vecAngularVelocity );
+		IMotionEvent::simresult_e simResult = m_pMotionEvent->Simulate( this, pObject, flDeltaTime, (1.0f / flDeltaTime), vecLocalVelocity, vecAngularVelocity );
+
+		TI_PRAGMA_TODO( "//Tony; I need to get rid of the damn inv deltatime; the only reason I added it, was so i didn't have to keep doing the math." );
 
 		vecLocalVelocity *= flDeltaTime;
 		vecAngularVelocity *= flDeltaTime;

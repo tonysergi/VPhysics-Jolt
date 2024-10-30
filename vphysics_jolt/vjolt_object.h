@@ -44,6 +44,11 @@ public:
 	void			EnableDrag( bool enable ) override;
 	void			EnableMotion( bool enable ) override;
 
+#if defined( TACTICALINTERVENTION )
+	// Tony; Toggle static state, we only use this in TI for the non-driveable cars that can blow up.
+	void			SetStatic( bool isStatic ) override;
+#endif
+
 	void			SetGameData( void *pGameData ) override;
 	void *			GetGameData() const override;
 	void			SetGameFlags( unsigned short userFlags ) override;
@@ -91,7 +96,11 @@ public:
 	void			GetPositionMatrix( matrix3x4_t *positionMatrix ) const override;
 	void			SetVelocity( const Vector *velocity, const AngularImpulse *angularVelocity ) override;
 
-	void			SetVelocityInstantaneous( const Vector *velocity, const AngularImpulse *angularVelocity ) override;
+	void			SetVelocityInstantaneous( const Vector *velocity, const AngularImpulse *angularVelocity 
+#if defined( TACTICALINTERVENTION )	
+		, bool dontClamp = false
+#endif
+	) override;
 
 	void			GetVelocity( Vector *velocity, AngularImpulse *angularVelocity ) const override;
 
@@ -107,6 +116,18 @@ public:
 	void			ApplyForceCenter( const Vector &forceVector ) override;
 	void			ApplyForceOffset( const Vector &forceVector, const Vector &worldPosition ) override;
 	void			ApplyTorqueCenter( const AngularImpulse &torque ) override;
+
+	//Tony; non async versions of all three of those..
+#if defined( TACTICALINTERVENTION )
+	void			ApplyForceOffsetNoAsync( const Vector& forceVector, const Vector& worldPosition, bool clampVelocity = true ) override;
+	void			ApplyTorqueCenterNoAsync( const AngularImpulse& torqueImpulse ) override;
+
+	void			CarHelper_CalcSteeringForces( CarWheel_t* wheelData, float deltaTime, float deltaTimeInv, float* straightForcesOut ) override;
+	void			CarHelper_ApplySteeringForces( CarWheel_t* wheelData, float deltaTime, float deltaTimeInv, float* straightForces ) override;
+	void			CarHelper_AddExtraGravity( float extraGravity, float deltaTime ) override;
+	void			CarHelper_NegateForwardMotion( Vector direction, float deltaTime ) override;
+	void			CarHelper_GetSurfaceSpeed_WS( const Vector& pos, const Vector& normal, Vector& Speed, Vector& ProjectedSpeed ) override;
+#endif
 
 	void			CalculateForceOffset( const Vector &forceVector, const Vector &worldPosition, Vector *centerForce, AngularImpulse *centerTorque ) const override;
 	void			CalculateVelocityOffset( const Vector &forceVector, const Vector &worldPosition, Vector *centerVelocity, AngularImpulse *centerAngularVelocity ) const override;

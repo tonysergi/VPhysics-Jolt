@@ -179,6 +179,16 @@ void JoltPhysicsObject::EnableMotion( bool enable )
 	UpdateLayer();
 }
 
+#if defined( TACTICALINTERVENTION )
+void JoltPhysicsObject::SetStatic( bool isStatic )
+{
+	if ( IsStatic() == isStatic )
+		return;
+
+	//Can this be toggled in jolt?
+	m_bStatic = isStatic;
+}
+#endif
 //-------------------------------------------------------------------------------------------------
 
 void JoltPhysicsObject::SetGameData( void *pGameData )
@@ -487,7 +497,11 @@ void JoltPhysicsObject::SetVelocity( const Vector *velocity, const AngularImpuls
 
 //-------------------------------------------------------------------------------------------------
 
-void JoltPhysicsObject::SetVelocityInstantaneous( const Vector *velocity, const AngularImpulse *angularVelocity )
+void JoltPhysicsObject::SetVelocityInstantaneous( const Vector *velocity, const AngularImpulse *angularVelocity
+#ifdef TACTICALINTERVENTION
+	, bool dontClamp /*= false*/ //irrelevant with jolt; will fix this later.
+#endif
+	)
 {
 	SetVelocity( velocity, angularVelocity );
 }
@@ -635,7 +649,64 @@ void JoltPhysicsObject::ApplyTorqueCenter( const AngularImpulse &torque )
 			m_pPhysicsSystem->GetBodyInterfaceNoLock().ActivateBodies( &m_pBody->GetID(), 1 );
 	}
 }
+#if defined( TACTICALINTERVENTION )
+void JoltPhysicsObject::ApplyForceOffsetNoAsync( const Vector &forceVector, const Vector &worldPosition, bool clampVelocity /*= true */ )
+{
+	//just call into the regular ones for now.
+	ApplyForceOffset( forceVector, worldPosition );
+}
 
+
+void JoltPhysicsObject::ApplyTorqueCenterNoAsync( const AngularImpulse& torqueImpulse )
+{
+	//just call into the regular ones for now.
+	ApplyTorqueCenter( torqueImpulse );
+}
+
+
+void JoltPhysicsObject::CarHelper_CalcSteeringForces( CarWheel_t *wheelData, float deltaTime, float deltaTimeInv, float *straightForcesOut )
+{
+	//todo; just do this stuff in game code, and remove later.
+	//it needs `vehicle_new_engine true` anyway
+}
+
+
+void JoltPhysicsObject::CarHelper_ApplySteeringForces( CarWheel_t *wheelData, float deltaTime, float deltaTimeInv, float *straightForces )
+{
+	//todo; just do this stuff in game code, and remove later.
+	//it needs `vehicle_new_engine true` anyway
+}
+
+
+void JoltPhysicsObject::CarHelper_AddExtraGravity( float extraGravity, float deltaTime )
+{
+	if ( !IsMoveable() )
+		return;
+
+	//Tony; i have no idea if this is even correct at all.
+	Vector gravity;
+	m_pEnvironment->GetGravity( &gravity );
+
+	JPH::Vec3 impulse = SourceToJolt::Distance( gravity * extraGravity * m_flCachedMass * deltaTime );
+	JPH::BodyInterface& bodyInterface = m_pPhysicsSystem->GetBodyInterfaceNoLock();
+	JPH::Vec3 joltPosition = bodyInterface.GetPosition( m_pBody->GetID() );
+	bodyInterface.AddImpulse( m_pBody->GetID(), impulse, joltPosition );
+}
+
+
+void JoltPhysicsObject::CarHelper_NegateForwardMotion( Vector direction, float deltaTime )
+{
+	//todo; just do this stuff in game code, and remove later.
+}
+
+
+void JoltPhysicsObject::CarHelper_GetSurfaceSpeed_WS( const Vector &pos, const Vector &normal, Vector &Speed, Vector &ProjectedSpeed )
+{
+	//Tony; temporarily just do this the old way.
+	GetVelocityAtPoint( pos, &Speed );
+	ProjectedSpeed = Speed + normal * -Speed.Dot( normal );
+}
+#endif //TACTICALINTERVENTION
 //-------------------------------------------------------------------------------------------------
 
 void JoltPhysicsObject::CalculateForceOffset( const Vector &forceVector, const Vector &worldPosition, Vector *centerForce, AngularImpulse *centerTorque ) const

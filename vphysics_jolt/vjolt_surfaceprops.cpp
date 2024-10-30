@@ -75,15 +75,16 @@ static const JoltKVSchemaProp_t kSurfacePropDescs[] =
 	// Game Properties
 	{ "MaxSpeedFactor",						KVSCHEMA_DESC( JoltSurfaceProp, data.game.maxSpeedFactor ),						FillFloatProp },
 	{ "JumpFactor",							KVSCHEMA_DESC( JoltSurfaceProp, data.game.jumpFactor ),							FillFloatProp },
-#ifdef GAME_CSGO_OR_NEWER
-	{ "PenetrationModifier",				KVSCHEMA_DESC( JoltSurfaceProp, data.game.penetrationModifier ),				FillFloatProp },
-	{ "DamageModifier",						KVSCHEMA_DESC( JoltSurfaceProp, data.game.damageModifier ),						FillFloatProp },
-#endif
 	{ "GameMaterial",						KVSCHEMA_DESC( JoltSurfaceProp, data.game.material ),							FillGameMaterialProp },
 	{ "Climbable",							KVSCHEMA_DESC( JoltSurfaceProp, data.game.climbable ),							FillUnsignedCharProp },
-#ifdef GAME_CSGO_OR_NEWER
+#if defined( GAME_CSGO_OR_NEWER )
+	{ "PenetrationModifier",				KVSCHEMA_DESC( JoltSurfaceProp, data.game.penetrationModifier ),				FillFloatProp },
+	{ "DamageModifier",						KVSCHEMA_DESC( JoltSurfaceProp, data.game.damageModifier ),						FillFloatProp },
 	{ "HideTargetID",						KVSCHEMA_DESC( JoltSurfaceProp, data.game.hidetargetid ),						FillBoolProp },
 	{ "DamageLossPercentPerPenetration",	KVSCHEMA_DESC( JoltSurfaceProp, data.game.damageLossPercentPerPenetration ),	FillFloatProp },
+#endif
+#if defined( TACTICALINTERVENTION )
+	{ "detonateIncendiary",					KVSCHEMA_DESC( JoltSurfaceProp, data.game.detonateIncendiary ),					FillIntProp }, //get rid of this!
 #endif
 };
 

@@ -37,6 +37,10 @@ public:
 	bool				GetWheelContactPoint( int index, Vector *pContactPoint, int *pSurfaceProps ) override;
 	void				SetSpringLength( int wheelIndex, float length ) override;
 	void				SetWheelFriction( int wheelIndex, float friction ) override;
+#if defined( TACTICALINTERVENTION )
+	void				SetWheelRadius( int wheelIndex, float radius ) override { /* todo */ };
+	void				SetPosition( const Vector* pos, const QAngle* ang ) override { /* todo */ };
+#endif
 
 	void				OnVehicleEnter( void ) override;
 	void				OnVehicleExit( void ) override;
