@@ -520,6 +520,11 @@ IVPhysicsKeyParser *CreateVPhysicsKeyParser( const char *pKeyData, bool bIsPacke
 	if ( !pszKV )
 	{
 		Log_Warning( LOG_VJolt, "CreateVPhysicsKeyParser: Encountered invalid KV data. Falling back to a dummy KV. You may notice a broken prop/vehicle.\n" );
+#if defined( _DEBUG )
+		//print the broken keyvalues, so we can actually fix the model.
+		if ( pKeyData != nullptr )
+			Log_Warning( LOG_VJolt, "%s\n", pKeyData );
+#endif
 
 		pszKV = new KeyValues( "VPhysicsKeyParse_Fallback" );
 		pszKV->LoadFromBuffer( "VPhysicsKeyParse_Fallback", DummyParserKeyValues );
