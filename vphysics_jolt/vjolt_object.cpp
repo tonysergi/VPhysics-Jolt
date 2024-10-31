@@ -686,11 +686,10 @@ void JoltPhysicsObject::CarHelper_AddExtraGravity( float extraGravity, float del
 	//Tony; i have no idea if this is even correct at all.
 	Vector gravity;
 	m_pEnvironment->GetGravity( &gravity );
-
-	JPH::Vec3 impulse = SourceToJolt::Distance( gravity * extraGravity * m_flCachedMass * deltaTime );
-	JPH::BodyInterface& bodyInterface = m_pPhysicsSystem->GetBodyInterfaceNoLock();
-	JPH::Vec3 joltPosition = bodyInterface.GetPosition( m_pBody->GetID() );
-	bodyInterface.AddImpulse( m_pBody->GetID(), impulse, joltPosition );
+	
+	JPH::BodyInterface& bodyInterface = m_pPhysicsSystem->GetBodyInterfaceNoLock(); 
+	JPH::Vec3 extra_gravity_force_value = SourceToJolt::Distance( gravity * extraGravity * m_flCachedInvMass ) * deltaTime;
+	bodyInterface.AddLinearVelocity( m_pBody->GetID(), extra_gravity_force_value );
 }
 
 
