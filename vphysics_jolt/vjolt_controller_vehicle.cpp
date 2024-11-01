@@ -18,7 +18,11 @@ static ConVar vjolt_vehicle_throttle_opposition_limit( "vjolt_vehicle_throttle_o
 //------------------------------------------------------------------------------------------------
 
 static const JPH::Vec3 VehicleUpVector		= JPH::Vec3( 0, 0, 1 );
+#if defined( TACTICALINTERVENTION ) //Not rotated 90 degrees.
+static const JPH::Vec3 VehicleForwardVector = JPH::Vec3( 1, 0, 0 );
+#else
 static const JPH::Vec3 VehicleForwardVector	= JPH::Vec3( 0, 1, 0 );
+#endif
 
 static const char *VehicleTypeToName( unsigned int VehicleType )
 {
@@ -212,7 +216,11 @@ void JoltPhysicsVehicleController::VehicleDataReload()
 
 float JoltPhysicsVehicleController::GetSpeed()
 {
+#if defined( TACTICALINTERVENTION ) //Not rotated 90 degrees.
+	const Vector orientation = GetColumn( GetBodyMatrix(), MatrixAxis::Forward );
+#else
 	const Vector orientation = GetColumn( GetBodyMatrix(), MatrixAxis::Left );
+#endif
 	return orientation.Dot( m_pCarBodyObject->GetVelocity() );
 }
 
@@ -408,10 +416,10 @@ void JoltPhysicsVehicleController::CreateWheel( JPH::VehicleConstraintSettings &
 
 	JPH::WheelSettingsWV *wheelSettings = new JPH::WheelSettingsWV;
 	wheelSettings->mPosition			= SourceToJolt::Distance( wheelPositionLocal );
-	wheelSettings->mSuspensionDirection	= JPH::Vec3( 0, 0, -1 );
-	wheelSettings->mSteeringAxis		= JPH::Vec3( 0, 0, 1 );
-	wheelSettings->mWheelUp				= JPH::Vec3( 0, 0, 1 );
-	wheelSettings->mWheelForward		= JPH::Vec3( 0, 1, 0 );
+	wheelSettings->mSuspensionDirection	= -VehicleUpVector;//JPH::Vec3( 0, 0, -1 );		//Tony; use the constants; so I only have to change one place.
+	wheelSettings->mSteeringAxis		= VehicleUpVector;//JPH::Vec3( 0, 0, 1 );		//Tony; use the constants; so I only have to change one place.
+	wheelSettings->mWheelUp				= VehicleUpVector;//JPH::Vec3( 0, 0, 1 );		//Tony; use the constants; so I only have to change one place.
+	wheelSettings->mWheelForward		= VehicleForwardVector;//JPH::Vec3( 0, 1, 0 );	//Tony; use the constants; so I only have to change one place.
 	wheelSettings->mAngularDamping		= axle.wheels.rotdamping;
 	// TODO(Josh): What about more than 4 wheels?
 	wheelSettings->mMaxSteerAngle		= axleIdx == 0 ? steeringAngle : 0.0f;

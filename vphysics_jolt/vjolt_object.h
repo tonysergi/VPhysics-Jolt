@@ -122,11 +122,7 @@ public:
 	void			ApplyForceOffsetNoAsync( const Vector& forceVector, const Vector& worldPosition, bool clampVelocity = true ) override;
 	void			ApplyTorqueCenterNoAsync( const AngularImpulse& torqueImpulse ) override;
 
-	void			CarHelper_CalcSteeringForces( CarWheel_t* wheelData, float deltaTime, float deltaTimeInv, float* straightForcesOut ) override;
-	void			CarHelper_ApplySteeringForces( CarWheel_t* wheelData, float deltaTime, float deltaTimeInv, float* straightForces ) override;
 	void			CarHelper_AddExtraGravity( float extraGravity, float deltaTime ) override;
-	void			CarHelper_NegateForwardMotion( Vector direction, float deltaTime ) override;
-	void			CarHelper_GetSurfaceSpeed_WS( const Vector& pos, const Vector& normal, Vector& Speed, Vector& ProjectedSpeed ) override;
 #endif
 
 	void			CalculateForceOffset( const Vector &forceVector, const Vector &worldPosition, Vector *centerForce, AngularImpulse *centerTorque ) const override;

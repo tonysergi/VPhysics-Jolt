@@ -663,21 +663,6 @@ void JoltPhysicsObject::ApplyTorqueCenterNoAsync( const AngularImpulse& torqueIm
 	ApplyTorqueCenter( torqueImpulse );
 }
 
-
-void JoltPhysicsObject::CarHelper_CalcSteeringForces( CarWheel_t *wheelData, float deltaTime, float deltaTimeInv, float *straightForcesOut )
-{
-	//todo; just do this stuff in game code, and remove later.
-	//it needs `vehicle_new_engine true` anyway
-}
-
-
-void JoltPhysicsObject::CarHelper_ApplySteeringForces( CarWheel_t *wheelData, float deltaTime, float deltaTimeInv, float *straightForces )
-{
-	//todo; just do this stuff in game code, and remove later.
-	//it needs `vehicle_new_engine true` anyway
-}
-
-
 void JoltPhysicsObject::CarHelper_AddExtraGravity( float extraGravity, float deltaTime )
 {
 	if ( !IsMoveable() )
@@ -690,20 +675,6 @@ void JoltPhysicsObject::CarHelper_AddExtraGravity( float extraGravity, float del
 	JPH::BodyInterface& bodyInterface = m_pPhysicsSystem->GetBodyInterfaceNoLock(); 
 	JPH::Vec3 extra_gravity_force_value = SourceToJolt::Distance( gravity * extraGravity * m_flCachedInvMass ) * deltaTime;
 	bodyInterface.AddLinearVelocity( m_pBody->GetID(), extra_gravity_force_value );
-}
-
-
-void JoltPhysicsObject::CarHelper_NegateForwardMotion( Vector direction, float deltaTime )
-{
-	//todo; just do this stuff in game code, and remove later.
-}
-
-
-void JoltPhysicsObject::CarHelper_GetSurfaceSpeed_WS( const Vector &pos, const Vector &normal, Vector &Speed, Vector &ProjectedSpeed )
-{
-	//Tony; temporarily just do this the old way.
-	GetVelocityAtPoint( pos, &Speed );
-	ProjectedSpeed = Speed + normal * -Speed.Dot( normal );
 }
 #endif //TACTICALINTERVENTION
 //-------------------------------------------------------------------------------------------------
